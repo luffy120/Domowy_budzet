@@ -13,7 +13,7 @@ namespace Domowy_budzet
 
         public void dodaj_uzytkownika()
         {
-
+            
         }
         public void usun_uzytkownika()
         {
