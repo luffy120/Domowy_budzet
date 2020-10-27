@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Data.SqlClient;
-using System.Data;
-
+using MySql.Data.MySqlClient;
 namespace Domowy_budzet
 {
     class Osoba
@@ -38,8 +36,7 @@ namespace Domowy_budzet
                     string username = Console.ReadLine();
                     Console.Write("Podaj hasło:");
                     string password = Console.ReadLine();
-                    string passwordHashed = PasswordHashing.CreatePasswordHash(password);
-                    int validation = ValidateUser(username, passwordHashed);
+                    int validation = ValidateUser(username, password);
                     if (validation == 0) { Console.WriteLine("Admin"); }
                     else if (validation == 1) { Console.WriteLine("User"); }
                     else if (validation == 2) { Console.WriteLine("Zły login lub hasło"); }
@@ -68,37 +65,53 @@ namespace Domowy_budzet
 
         private static int ValidateUser(string username, string password)
         {
-            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            string path = (System.IO.Path.GetDirectoryName(executable));
-            Console.WriteLine(path);
-            AppDomain.CurrentDomain.SetData("DataDirectory", path);
-            //chuj nie wiem jeszcze jak połączyć się jeszcze z tą bazą xD
-            using (SqlConnection con = new SqlConnection(@"Data Source=@path\Database1.mdf;Integrated Security=True"))
+            //Połączenie bazy danych, zmienic jak kiedyś będzie online
+            string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=budzetdatabase;";
+            // Zapytanie
+            string query = "SELECT * FROM osoba where login ='"+username+"'";
+            
+            MySqlConnection databaseConnection = new MySqlConnection(connectionString);
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            MySqlDataReader reader;
+
+            try
             {
-                SqlCommand cmd = new SqlCommand("select * from Osoby where login like @username and password = @password;");
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
-                cmd.Connection = con;
-                con.Open();
+                // Otwarcie bazy danych
+                databaseConnection.Open();
 
-                DataSet ds = new DataSet();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(ds);
-                con.Close();
+                // Wykonanie zapytania
+                reader = commandDatabase.ExecuteReader();
 
-                bool loginSuccessful = ((ds.Tables.Count > 0) && (ds.Tables[0].Rows.Count > 0));
-
-                if (loginSuccessful)
+                if (reader.HasRows)
                 {
-                    Console.WriteLine("Success!");
+                    while (reader.Read())
+                    {
+                        
+                        //Bool sprawdza czy użytkownik jest adminem, hashedPassword pobiera stringa z bazy
+                        bool isAdmin = reader.GetBoolean(3);
+                        string hashedPassword = reader.GetString(5);
+                        //Walidacja hasła podanego z hashem z bazy
+                        bool passwordValidateHash = PasswordHashing.Validate(password, hashedPassword);
+                        if (passwordValidateHash && isAdmin == true) { return 0; }
+                        else if (passwordValidateHash && isAdmin == false) { return 1; }
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid username or password");
+                //Nie znaleziono żadnego rekordu
+                    return 2;
                 }
-            }
 
-            return 0;
+                // Zamykanie połączenia
+                databaseConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                // Error jakiś
+                Console.WriteLine("exce");
+            }
+            return 2;
         }
 
     }
