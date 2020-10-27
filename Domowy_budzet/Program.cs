@@ -10,7 +10,7 @@ namespace Domowy_budzet
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Test");
+            Osoba.zaloguj();
         }
     }
 }
