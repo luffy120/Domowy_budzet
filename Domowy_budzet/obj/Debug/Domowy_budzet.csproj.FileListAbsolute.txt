@@ -1,0 +1,9 @@
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\bin\Debug\Database1.mdf
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\bin\Debug\Database1_log.ldf
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\bin\Debug\Domowy_budzet.exe.config
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\bin\Debug\Domowy_budzet.exe
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\bin\Debug\Domowy_budzet.pdb
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\obj\Debug\Domowy_budzet.csprojAssemblyReference.cache
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\obj\Debug\Domowy_budzet.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\obj\Debug\Domowy_budzet.exe
+C:\Users\admin\source\repos\Domowy_budzet\Domowy_budzet\obj\Debug\Domowy_budzet.pdb
